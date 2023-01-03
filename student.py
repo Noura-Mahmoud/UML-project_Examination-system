@@ -1,4 +1,8 @@
 import person as p 
+from databaseConnector import connector
+conn = connector()
+
+
 class Student(p.Person):
   def __init__(self, name):
     p.Person.__init__(self, name)
@@ -12,12 +16,26 @@ class Student(p.Person):
     pass
     # view exam for the student and take his answers
     
-  def getGrades(self):
-    return self.grades
+  def getGrades(self, stdID):
+    cursor = conn.cursor()
+    cursor.execute(
+        "GetStudentGrades ?",
+         (stdID)   
+        )
+        
+    for row in cursor:
+         print(row)
   
   def getApprovedCourses():
-    pass
-    # retrieve from database where course status id "approved"
+        cursor = conn.cursor()
+        cursor.execute(
+            "GetStudentGrades ?",
+            (stdID)   
+            )
+            
+        for row in cursor:
+            print(row)
+  
   
   
     
@@ -31,3 +49,4 @@ class Student(p.Person):
 
 s1 = Student("a")
 print(s1.Name)
+s1.getGrades(2)

@@ -1,9 +1,9 @@
 import person as p 
 class Admin(p.Person):
-    def __init__(self, id, name):
-        p.Person.__init__(self, id, name)
+    def __init__(self, name):
+        p.Person.__init__(self, name)
         
-    def addCourse(courseName):
+    def addCourse(courseID, courseName):
         pass
     
     def editCourse(courseID, courseName):
@@ -12,7 +12,7 @@ class Admin(p.Person):
     def deleteCourse(courseID):
         pass
         
-    def addInstructor(InstructorName):
+    def addInstructor(InstructorID, InstructorName):
         pass
     
     def editInstructor(InstructorID, InstructorName):

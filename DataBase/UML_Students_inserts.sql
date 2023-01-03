@@ -52,19 +52,23 @@ BEGIN
     INNER JOIN std_course SC ON SC.crsID = C.crsID
     WHERE SC.state = 'Approved' AND SC.stdID = @stdID
 END
+GetApprovedCourses 2
+
+
 
 --Get grades in all exams :
-CREATE PROCEDURE GetStudentGrades
+ALTER PROCEDURE GetStudentGrades
     @stdID int
 AS
 BEGIN
-    SELECT C.CrsName, E.ExamDescription, SE.grade
+    SELECT C.CrsName, E.ExamDescription, cast (SE.grade as VARCHAR (5))
     FROM student_exam SE
     INNER JOIN exam E ON SE.examID = E.ExamID
     INNER JOIN course C ON E.crsID = C.crsID
     WHERE SE.stdID = @stdID
 END
 
+GetStudentGrades 2
 --takeExam sutff ??
 
 CREATE PROCEDURE GetExam

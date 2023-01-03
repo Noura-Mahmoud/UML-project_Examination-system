@@ -1,5 +1,6 @@
 --instructor class functions 
 
+Can you make the suitable class diagram for this database : 
 
 CREATE DATABASE ExaminationSystem;
 
@@ -10,6 +11,8 @@ CREATE TABLE student
 stdID int IDENTITY(1,1),
 FirstName varchar(50),
 LastName varchar(50),
+username varchar(50),
+password varchar(50),
 
 PRIMARY KEY (stdID)
 );
@@ -20,6 +23,8 @@ CREATE TABLE instructor
 insID int IDENTITY(1,1),
 FirstName varchar(50),
 LastName varchar(50),
+username varchar(50),
+password varchar(50),
 
 PRIMARY KEY (insID)
 );
@@ -30,6 +35,8 @@ CREATE TABLE Admin
 adminID int IDENTITY(1,1),
 FirstName varchar(50),
 LastName varchar(50),
+username varchar(50),
+password varchar(50),
 PRIMARY KEY (adminID)
 );
 
