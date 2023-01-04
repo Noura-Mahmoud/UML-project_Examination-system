@@ -1,5 +1,6 @@
+import pyodbc
 import person as p 
-class Instructor(p.Person):
+class Instrucor(p.Person):
   def __init__(self, name):
     p.Person.__init__(self, name)
   
@@ -20,3 +21,25 @@ class Instructor(p.Person):
     cursor = conn.cursor()
     cursor.execute("addQuestion ?,?,?,?,?,?,?;",(questionBody, crsID, choiceA, choiceB, choiceC, choiceD, correctAns))
     conn.commit()
+    
+
+# #connec to database
+# conn = pyodbc.connect(
+#         "Driver={SQL Server Native Client 11.0};"
+#         "Server=Mikasa;"
+#         "Database=Examination_System;"
+#         "Trusted_Connection=yes;"
+#     )
+
+
+
+# ins1 = Instrucor ("khaled")
+# ins1.addQuestion(conn,'what is your name',1,'raneem','noura','hamada','ak','ak')
+# ins1.addQuestion(conn,'what is your name',1,'raneem','noura','hamada','ak','ak')
+# ins1.addQuestion(conn,'what is your name',1,'raneem','noura','hamada','ak','ak')
+# ins1.addQuestion(conn,'what is your name',1,'raneem','noura','hamada','ak','ak')
+# ins1.addQuestion(conn,'what is your name',1,'raneem','noura','hamada','ak','ak')
+# ins1.addQuestion(conn,'what is your name',1,'raneem','noura','hamada','ak','ak')
+
+# ins1.generateExam(conn, 1,5)
+
