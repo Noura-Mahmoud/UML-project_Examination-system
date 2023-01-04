@@ -14,9 +14,37 @@ class Student(p.Person):
         cursor = conn.cursor()
         cursor.execute("EXEC EnrollStudentByCourseName @stdID = ?, @crsName = ?", self.stdID, crsName)
 
-    def takeExam(examID):
-        pass
-        # view exam for the student and take his answers
+    def takeExam(self, examID):
+        # Retrieve the exam information
+        cursor = conn.cursor()
+        cursor.execute("EXEC GetExamInfo @examID = ?", examID)
+        exam_info = cursor.fetchone()
+        print("=======================")
+        print("Exam Description: " + exam_info.ExamDescription)
+        print("Exam Duration: " + str(exam_info.ExamDurationMinutes) + " minutes")
+        print("Course: " + exam_info.CrsName)
+        print("=======================")
+
+        # Retrieve the exam questions and choices
+        cursor = conn.cursor()
+        cursor.execute("EXEC GetExam @examID = ?", examID)
+        questions = cursor.fetchall()
+
+        # Prompt the student to answer each question
+        for question in questions:
+            print(question.question)
+            print("A. " + question.A)
+            print("B. " + question.B)
+            print("C. " + question.C)
+            print("D. " + question.D)
+            answer = input("Please enter your answer: ")
+            # Submit the student's answer
+
+            cursor = conn.cursor()
+            cursor.execute("EXEC SolveQuestion @stdID = ?, @quesID = ?, @answer = ?", self.stdID, question.quesID,
+                           answer)
+        print("=============================")
+        print("Exam submitted successfully!")
 
     def get_data(self, data_type, return_data=False):
         cursor = conn.cursor()
