@@ -1,8 +1,18 @@
 ----------------------------------------------
---STUDENT
+--STUDENT AND EXAM PROCEDURES
 ----------------------------------------------
+
 select * from student
 select * from course
+EXEC GetExam @examID = 2
+
+EXEC SolveQuestion @stdID = 1, @quesID = 1, @answer = 4
+select * from std_answers
+select * from Choices
+
+TRUNCATE TABLE std_answers;
+
+
 CREATE TABLE std_answers
 (
     stdID int,
@@ -90,15 +100,25 @@ BEGIN
     WHERE E.ExamID = @examID
 END
 
-CREATE PROCEDURE SolveQuestion
+CREATE OR ALTER PROCEDURE SolveQuestion
     @stdID int,
     @quesID int,
     @answer varchar(50)
 AS
 BEGIN
-    INSERT INTO std_answers (stdID, quesID, answer)
-    VALUES (@stdID, @quesID, @answer)
+    IF EXISTS (SELECT 1 FROM std_answers WHERE stdID = @stdID AND quesID = @quesID)
+    BEGIN
+        UPDATE std_answers
+        SET answer = @answer
+        WHERE stdID = @stdID AND quesID = @quesID;
+    END
+    ELSE
+    BEGIN
+        INSERT INTO std_answers (stdID, quesID, answer)
+        VALUES (@stdID, @quesID, @answer);
+    END
 END
+
 
 exec GetStudentGrades 1 ;
 exec GetApprovedCourses 1;
@@ -107,3 +127,87 @@ SELECT @@SERVERNAME
 
 select * from student
 getExaminfo 1
+
+EXECUTE getExam 1
+
+SELECT * FROM getExam 1
+
+CREATE OR ALTER PROCEDURE CheckAnswer
+    @stdID int,
+    @quesID int
+AS
+BEGIN
+    SELECT
+        CASE WHEN sa.answer = c.correctAnswer THEN 1 ELSE 0 END AS 'Result'
+    FROM std_answers sa
+    INNER JOIN Choices c ON sa.quesID = c.quesID
+    WHERE sa.stdID = @stdID AND sa.quesID = @quesID;
+END
+
+CREATE OR ALTER FUNCTION GetExamTable(@examID int)
+RETURNS TABLE
+AS
+RETURN
+(
+    SELECT Q.quesID, Q.question, C.A, C.B, C.C, C.D
+    FROM exam_question EQ
+    INNER JOIN question Q ON EQ.quesID = Q.quesID
+    INNER JOIN choices C ON Q.quesID = C.quesID
+    WHERE EQ.examID = @examID
+)
+
+SELECT quesID FROM GetExamTable(1)
+
+
+
+CREATE OR ALTER PROCEDURE CheckExamAnswers1
+    @stdID int,
+    @examID int
+AS
+BEGIN
+
+	DECLARE @t table (quesID int, result varchar(50))
+
+    DECLARE @quesID int;
+
+    DECLARE quesID_cursor CURSOR FOR
+        SELECT quesID FROM getExamTable(@examID);
+
+    OPEN quesID_cursor;
+
+    FETCH NEXT FROM quesID_cursor INTO @quesID;
+
+    WHILE @@FETCH_STATUS = 0
+    BEGIN
+        insert into @t
+		    SELECT sa.quesID,
+				CASE WHEN sa.answer = c.correctAnswer THEN 'true' ELSE 'false' END AS 'Result'
+			FROM std_answers sa
+			INNER JOIN Choices c ON sa.quesID = c.quesID
+			WHERE sa.stdID = @stdID AND sa.quesID = @quesID;
+
+
+        FETCH NEXT FROM quesID_cursor INTO @quesID;
+    END;
+	select * from @t
+    CLOSE quesID_cursor;
+    DEALLOCATE quesID_cursor;
+END
+
+CREATE OR ALTER PROCEDURE CheckExamAnswers
+    @stdID int,
+    @examID int
+AS
+BEGIN
+
+    SELECT sa.quesID,
+        CASE WHEN sa.answer = c.correctAnswer THEN 'true' ELSE 'false' END AS 'result'
+    FROM std_answers sa
+    INNER JOIN Choices c ON sa.quesID = c.quesID
+    WHERE sa.stdID = @stdID AND sa.quesID IN (SELECT quesID FROM getExamTable(@examID))
+END
+
+select * from std_answers
+EXEC CheckExamAnswers @stdID = 1, @examID = 1
+EXEC CheckAnswer @stdID = 1, @quesID = 1;
+select * from Exam
