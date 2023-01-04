@@ -1,3 +1,6 @@
+from databaseConnector import connector
+conn = connector()
+
 import person as p 
 class Student(p.Person):
   def __init__(self, name):
