@@ -1,5 +1,6 @@
-import course, exam, admin, student, question, instructor
 import pyodbc
+import admin, student, instructor
+
 conn = pyodbc.connect(
         "Driver={SQL Server Native Client 11.0};"
         "Server=Mikasa;"
@@ -34,7 +35,7 @@ def check_admin(userName,password):
         
 def initializing():
     # print("To log in press 1 \nTo sign up press 2")
-    option = input("To log in press 1 \nTo sign up press 2")# parse int
+    option = input("To log in press 1 \nTo sign up press 2\n")# parse int
     # option = int(input())
     option = int(option)
     if option == 1:
@@ -64,15 +65,21 @@ def loginMenu():
   password=input("user password:")
     
   if type == 1:
-    check_admin(username,password)
-    adminUser()
+      check = check_admin(username,password)
+      if check != 0:
+        adminUser()
+    # adminUser()
   elif type == 2:
-    check_instructor(username,password)
-    instructorUser()
+      check = check_instructor(username,password)
+      if check != 0:
+        instructorUser()
   elif type == 3:
+      stdID = check_student(username,password)
+      if stdID != 0:
+        studentUser(stdID)
     # check_student(username,password)
-    stdID = check_student(username,password)
-    studentUser(stdID)
+    # stdID = check_student(username,password)
+    # studentUser(stdID)
         
   
 
@@ -80,53 +87,55 @@ def studentUser(stdID):
     print("if you want to enroll new course press 1, get approved courses press 2 or take exam press 3")
     userFunction = int(input())
     # userFunction = input()
+    st1=student.Student("a")
     if userFunction == 1:
         print("please insert the exam id")
         # crsID = input()
         crsID = int(input())
-        student.enroll(crsID)
+        st1.enroll(crsID)
     elif userFunction == 2:
-        student.getApprovedCourses(stdID)
+        st1.getApprovedCourses(stdID)
     elif userFunction == 3:
         print("please insert the exam id")
         # examID = input()
         examID = int(input())
-        student.takeExam(examID)
+        st1.takeExam(examID)
         
         
 
 def adminUser():
     print("if you want to add new course press 1, \nedit course press 2, \ndelete course press 3, \ninsert new instructor press 4, \nedit instructor press 5, \ndelete instructor press 6, \nto decide student state in a specific course press 7 \nor generate report press 8")
     # userFunction = input()
+    ad1= admin.Admin("a")
     userFunction = int(input())
     if userFunction == 1:
         print("please insert the course name")
         courseName = input()
-        admin.addCourse(courseName)
+        ad1.addCourse(courseName)
     elif userFunction == 2:
         print("please insert the course id")
         courseID = input()
         print("please insert the new course name")
         courseName = input()
-        admin.editCourse(courseID, courseName)
+        ad1.editCourse(courseID, courseName)
     elif userFunction == 3:
         print("please insert the course id")
         courseID = input()
-        admin.deleteCourse(courseID)
+        ad1.deleteCourse(courseID)
     elif userFunction == 4:
         print("please insert the instructor name")
         InstructorName = input()
-        admin.addInstructor(InstructorName)
+        ad1.addInstructor(InstructorName)
     elif userFunction == 5:
         print("please insert the instructor id")
         InstructorID = input()
         print("please insert the instructor name")
         InstructorName = input()
-        admin.editInstructor(InstructorID, InstructorName)
+        ad1.editInstructor(InstructorID, InstructorName)
     elif userFunction == 6:
         print("please insert the instructor id")
         InstructorID = input()
-        admin.deleteInstructor(InstructorID)
+        ad1.deleteInstructor(InstructorID)
     elif userFunction == 7:
         print("please insert the student id")
         stdID = input()
@@ -134,9 +143,9 @@ def adminUser():
         crsID = input()
         print("please insert your decision 'approved' or 'declined'")
         decision = input()
-        admin.approveDeclineStudents(stdID, crsID, decision)
+        ad1.approveDeclineStudents(stdID, crsID, decision)
     elif userFunction == 8:
-        admin.generateReport()
+        ad1.generateReport()
         
         
 
@@ -144,6 +153,7 @@ def instructorUser():
     print("if you want to add new question press 1, \ngenerate exam press 2")
     # userFunction = input()
     userFunction = int(input())
+    ins1 = instructor.Instrucor("a")
     if userFunction == 1:
         print("please enter the question body")
         questionBody = input()
@@ -160,14 +170,14 @@ def instructorUser():
         choiceD = input()
         print("please enter the correct answer")
         correctAns = input()
-        instructor.addQuestion(questionBody, crsID, choiceA, choiceB, choiceC, choiceD, correctAns)
+        ins1.addQuestion(questionBody, crsID, choiceA, choiceB, choiceC, choiceD, correctAns)
     elif userFunction == 2:
         print("please enter the course id")
         # crsID = input()
         crsID = int(input())
         print("please enter the number of questions")
         NumOfQuestion = input()
-        instructor.generateExam(crsID, NumOfQuestion)
+        ins1.generateExam(crsID, NumOfQuestion)
     
     
 initializing()
