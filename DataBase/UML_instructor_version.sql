@@ -182,3 +182,25 @@ as
 	delete from Choices
 	delete from Question
 ----------------------------------------------
+--if user exists the funcions return his ID otherwise returns 0
+
+create or alter proc check_student @userName varchar(50), @password varchar(50) WITH ENCRYPTION
+as
+IF Exists (Select * from student s where s.username = @userName and s.password= @password)
+Select s.stdID from student s where s.username = @userName and s.password= @password
+ELSE
+select 0
+
+create or alter proc check_instructor @userName varchar(50), @password varchar(50) WITH ENCRYPTION
+as
+IF Exists (Select * from instructor i where i.username = @userName and i.password= @password)
+Select i.insID from instructor i where i.username = @userName and i.password= @password
+ELSE
+select 0
+
+create or alter proc check_admin @userName varchar(50), @password varchar(50) WITH ENCRYPTION
+as
+IF Exists (Select * from Admin a where a.username = @userName and a.password= @password)
+Select a.adminID from Admin a where a.username = @userName and a.password= @password
+ELSE
+select 0
