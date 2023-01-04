@@ -3,27 +3,38 @@ conn = connector()
 
 import person as p 
 class Instrucor(p.Person):
-  def __init__(self, name):
+  def __init__(self, name, id):
     p.Person.__init__(self, name)
+    self.courses = []
+    self.id = id
   
   def getExamId(self):
     cursor = conn.cursor()
     cursor.execute("select top 1 ExamID from Exam order by ExamID desc;")
     for row in cursor:
         print(row)
+        for val in row:
+          print("the exam id is: ?", (val))
     
-  def generateExam(self,courseID, NumOfQuestion):
+  def generateExam(self, exam):
     cursor = conn.cursor()
-    cursor.execute("generateExam ?,?;",(courseID,NumOfQuestion))
+    cursor.execute("generateExam ?,?;",(exam.courseID,exam.NumOfQuestion))
     conn.commit()
     # return examid of the generated exam
     self.getExamId()
     
-  def addQuestion(self,questionBody, crsID, choiceA, choiceB, choiceC, choiceD, correctAns):
+  def addQuestion(self,ques):
     cursor = conn.cursor()
-    cursor.execute("addQuestion ?,?,?,?,?,?,?;",(questionBody, crsID, choiceA, choiceB, choiceC, choiceD, correctAns))
+    cursor.execute("addQuestion ?,?,?,?,?,?,?;",(ques.questionBody, ques.crsID, ques.choiceA, ques.choiceB, ques.choiceC, ques.choiceD, ques.correctAns))
     conn.commit()
     
+  # def loadCourseList(self):
+  #   cursor = conn.cursor()
+  #   cursor.execute("select crsID from course where insID = ?;", (self.id))
+  #   for row in cursor:
+  #       # print(row)
+  #       for val in row:
+  #         self.courses.append(val)
 
 # #connec to database
 # conn = pyodbc.connect(
@@ -33,15 +44,4 @@ class Instrucor(p.Person):
 #         "Trusted_Connection=yes;"
 #     )
 
-
-
-# ins1 = Instrucor ("khaled")
-# ins1.addQuestion(conn,'what is your name',1,'raneem','noura','hamada','ak','ak')
-# ins1.addQuestion(conn,'what is your name',1,'raneem','noura','hamada','ak','ak')
-# ins1.addQuestion(conn,'what is your name',1,'raneem','noura','hamada','ak','ak')
-# ins1.addQuestion(conn,'what is your name',1,'raneem','noura','hamada','ak','ak')
-# ins1.addQuestion(conn,'what is your name',1,'raneem','noura','hamada','ak','ak')
-# ins1.addQuestion(conn,'what is your name',1,'raneem','noura','hamada','ak','ak')
-
-# ins1.generateExam(conn, 1,5)
 

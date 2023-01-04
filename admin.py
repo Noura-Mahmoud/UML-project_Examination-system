@@ -1,9 +1,12 @@
+from databaseConnector import connector
+conn = connector()
+
 import person as p 
 class Admin(p.Person):
     def __init__(self, id, name):
         p.Person.__init__(self, id, name)
         
-    def addCourse(courseName):
+    def addCourse(crs):
         pass
     
     def editCourse(courseID, courseName):
@@ -12,7 +15,7 @@ class Admin(p.Person):
     def deleteCourse(courseID):
         pass
         
-    def addInstructor(InstructorName):
+    def addInstructor(ins):
         pass
     
     def editInstructor(InstructorID, InstructorName):

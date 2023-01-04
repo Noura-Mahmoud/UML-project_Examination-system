@@ -6,7 +6,7 @@ from prettytable import PrettyTable
 def connector():
     conn = pyodbc.connect(
         "Driver={SQL Server};"
-        "server=AHMEDKAMALDCFD;"
+        "server=Mikasa;"
         "Database=ExaminationSystem;"
         "Trusted_Connection=yes;"
     )

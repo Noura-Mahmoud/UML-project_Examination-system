@@ -1,5 +1,5 @@
 import pyodbc
-import admin, student, instructor
+import admin, student, instructor, question, exam
 
 conn = pyodbc.connect(
         "Driver={SQL Server Native Client 11.0};"
@@ -52,9 +52,7 @@ def initializing():
         username = input()
         print("please enter your password")
         password = input()
-        # signUp(username, password)
-        # initializing() # to login after sign up
-        
+
 def loginMenu():
   type= int( input("wlecome to Examination-system\n-------------------------------\nchoose ur type to login\n1-Admin\n2-instructor\n3-Student\n") )
   while type>3 or type<1:
@@ -77,11 +75,6 @@ def loginMenu():
       stdID = check_student(username,password)
       if stdID != 0:
         studentUser(stdID)
-    # check_student(username,password)
-    # stdID = check_student(username,password)
-    # studentUser(stdID)
-        
-  
 
 def studentUser(stdID):
     print("if you want to enroll new course press 1, get approved courses press 2 or take exam press 3")
@@ -100,8 +93,6 @@ def studentUser(stdID):
         # examID = input()
         examID = int(input())
         st1.takeExam(examID)
-        
-        
 
 def adminUser():
     print("if you want to add new course press 1, \nedit course press 2, \ndelete course press 3, \ninsert new instructor press 4, \nedit instructor press 5, \ndelete instructor press 6, \nto decide student state in a specific course press 7 \nor generate report press 8")
@@ -146,9 +137,7 @@ def adminUser():
         ad1.approveDeclineStudents(stdID, crsID, decision)
     elif userFunction == 8:
         ad1.generateReport()
-        
-        
-
+   
 def instructorUser():
     print("if you want to add new question press 1, \ngenerate exam press 2")
     # userFunction = input()
@@ -158,8 +147,7 @@ def instructorUser():
         print("please enter the question body")
         questionBody = input()
         print("please enter the course id")
-        # crsID = input()
-        crsID = int(input())
+        crsID = input()
         print("please enter the choiceA")
         choiceA = input()
         print("please enter the choiceB")
@@ -170,23 +158,15 @@ def instructorUser():
         choiceD = input()
         print("please enter the correct answer")
         correctAns = input()
-        ins1.addQuestion(questionBody, crsID, choiceA, choiceB, choiceC, choiceD, correctAns)
+        ques = question.Question(questionBody, crsID, choiceA, choiceB, choiceC, choiceD, correctAns)
+        ins1.addQuestion(ques)
     elif userFunction == 2:
         print("please enter the course id")
         # crsID = input()
         crsID = int(input())
         print("please enter the number of questions")
         NumOfQuestion = input()
-        ins1.generateExam(crsID, NumOfQuestion)
-    
-    
+        exam1 = exam.Exam(crsID, NumOfQuestion)
+        ins1.generateExam(exam1)
+   
 initializing()
-
-# cursor = conn.cursor()
-# cursor.execute(" select * from student where stdID = 1;")
-# for row in cursor:
-#     for val in row:
-#         print("val")
-#         print(val)
-#     print("row")
-#     print(row)

@@ -140,7 +140,7 @@ def connect():
   conn = pyodbc.connect(
           "Driver={SQL Server Native Client 11.0};"
           "Server=Mikasa;"
-          "Database=Examination_System;"
+          "Database=ExaminationSystem;"
           "Trusted_Connection=yes;"
       )
   
