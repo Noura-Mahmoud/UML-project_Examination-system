@@ -1,5 +1,7 @@
 import person as p 
-from databaseConnector import connector
+from databaseConnector import array_to_table, connector
+from prettytable import PrettyTable
+
 conn = connector()
 
 
@@ -53,8 +55,43 @@ class Admin(p.Person):
          conn.commit()
 
 
+
+    def approveDeclineStudents(self):
+            cursor = conn.cursor()
+            cursor.execute("getNumOfStudentsWithPendingCourses")
+            NumOfStudentsWithPendingCourses = cursor.fetchone()[0]   
+            print("There's "+ str(NumOfStudentsWithPendingCourses) + " students with pending courses")
+            cursor.execute("getPendingCoursesTable")
+            rows = cursor.fetchall()
+            table = PrettyTable()
+            table.field_names = ["stdID", "Num of pending courses"]
+            for row in rows:
+                  table.add_row([row[0], row[1]])
+            print(table)
+
+            stdIDs = input("Enter stdIDs SEPERATED BY a comma to see their pending courses: ")
+            #stdIDs = stdIDs.split(',')
+            print(stdIDs)
+            cursor.execute("getPendingCoursesByStdID ?" ,(stdIDs))
+            rows = cursor.fetchall()
+            table = PrettyTable()
+            table.field_names = ["Row#","stdID","CrsName","crsID","state"]
+            for row in rows:
+                   table.add_row([row[0], row[1], row[2], row[3], row[4]])
+            print(table)
+            rowToUpdate = input("Enter the number of rows you wish to update  SEPERATED BY a comma: ")
+            rowToUpdate = [int(x) for x in rowToUpdate.split(",")]
+
+            for i in rowToUpdate:
+                  cursor.execute("ApproveCourse ?,?" ,(rows[i][1],rows[i][3]))
+           
+            conn.commit()
+
+
+
 adm1 = Admin("admin")
 
+adm1.approveDeclineStudents()
 # adm1.addCourse("OOP",3)
 # adm1.editCourseName("OOP","hamada")
 # adm1.deleteCourse("hamada")
