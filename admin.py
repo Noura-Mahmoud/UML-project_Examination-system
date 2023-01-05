@@ -26,11 +26,11 @@ class Admin(p.Person):
                 )
           conn.commit()
 
-    def editCourseName(self,oldCourseName,newCourseName):
+    def editCourse(self,crsID,newCourseName):
         cursor = conn.cursor()
         cursor.execute(
-                "UPDATE course SET crsName = ? WHERE crsName = ?;",
-                (newCourseName,oldCourseName)   
+                "UPDATE course SET crsName = ? WHERE crsID = ?;",
+                (newCourseName,crsID)   
                 )
         conn.commit()
 
@@ -42,9 +42,8 @@ class Admin(p.Person):
                 )
          conn.commit()
 
-    def editInstructor(self, instructor):
-        # code to edit an instructor
-        pass
+    def editInstructor(self, InstructorID, InstructorFirst):
+       pass
 
     def deleteInstructor(self, instructorID):
          cursor = conn.cursor()
@@ -83,7 +82,7 @@ class Admin(p.Person):
             rowToUpdate = [int(x) for x in rowToUpdate.split(",")]
 
             for i in rowToUpdate:
-                  cursor.execute("ApproveCourse ?,?" ,(rows[i][1],rows[i][3]))
+                  cursor.execute("ApproveCourse ?,?" ,(rows[i-1][1],rows[i-1][3]))
            
             conn.commit()
 
@@ -91,7 +90,7 @@ class Admin(p.Person):
 
 adm1 = Admin("admin")
 
-adm1.approveDeclineStudents()
+# adm1.approveDeclineStudents()
 # adm1.addCourse("OOP",3)
 # adm1.editCourseName("OOP","hamada")
 # adm1.deleteCourse("hamada")
