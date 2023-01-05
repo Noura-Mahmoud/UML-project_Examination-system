@@ -1,7 +1,7 @@
 import person as p 
 from databaseConnector import array_to_table, connector
 from prettytable import PrettyTable
-
+from rep_menu import reportClass
 conn = connector()
 
 
@@ -26,11 +26,11 @@ class Admin(p.Person):
                 )
           conn.commit()
 
-    def editCourse(self,crsID,newCourseName):
+    def editCourseName(self,oldCourseName,newCourseName):
         cursor = conn.cursor()
         cursor.execute(
-                "UPDATE course SET crsName = ? WHERE crsID = ?;",
-                (newCourseName,crsID)   
+                "UPDATE course SET crsName = ? WHERE crsName = ?;",
+                (newCourseName,oldCourseName)   
                 )
         conn.commit()
 
@@ -42,8 +42,14 @@ class Admin(p.Person):
                 )
          conn.commit()
 
-    def editInstructor(self, InstructorID, InstructorFirst):
-       pass
+    def editInstructorUsername(self, InstructorID, username):
+            cursor = conn.cursor()
+            cursor.execute(
+                  "UPDATE instructor SET username = ? WHERE insID = ?;",
+                  (username,InstructorID)   
+                  )
+            conn.commit()
+            
 
     def deleteInstructor(self, instructorID):
          cursor = conn.cursor()
@@ -86,9 +92,12 @@ class Admin(p.Person):
            
             conn.commit()
 
+    def generateReport(self):
+          r1 = reportClass()
+          r1.menu()
+            
 
-
-adm1 = Admin("admin")
+# adm1 = Admin("admin")
 
 # adm1.approveDeclineStudents()
 # adm1.addCourse("OOP",3)

@@ -4,8 +4,13 @@ conn = connector()
 
 
 class Exam():
-    def __init__(self, examID):
+    def __init__(self, examID, courseID="", NumOfQuestion=""):
         self.examID = examID
+        self.question =[]
+        self.courseID =courseID
+        self.NumOfQuestion =NumOfQuestion
+        self.description = " "
+        self.duration = " "
 
     def checkExamAnswers(self, stdID, return_data=False):
         cursor = conn.cursor()
@@ -30,6 +35,6 @@ class Exam():
         percentage_rounded = round(percentage)
         return percentage_rounded
 
-exam = Exam(1)
-percentage = exam.countCorrectAnswers(1)
-print(f"The student got {percentage}% of the answers correct.")
+# exam = Exam(1)
+# percentage = exam.countCorrectAnswers(1)
+# print(f"The student got {percentage}% of the answers correct.")

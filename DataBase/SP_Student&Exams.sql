@@ -15,7 +15,7 @@ END
 
 --Procedure to Enroll Student in a course using course name
 
-CREATE PROCEDURE EnrollStudentByCourseName
+CREATE or alter PROCEDURE EnrollStudentByCourseName
     @stdID int,
     @crsName varchar(50)
 AS
@@ -30,6 +30,7 @@ BEGIN
     VALUES (@stdID, @crsID, 'Pending')
 END
 
+exec EnrollStudentByCourseName 6,
 --Procedure to Get Approved courses for a certain student :
 
 CREATE or ALTER PROCEDURE GetApprovedCourses

@@ -1,13 +1,7 @@
-import pyodbc
-import admin, student, instructor
+import admin, student, instructor, question, exam
+from databaseConnector import  connector
+conn = connector()
 
-conn = pyodbc.connect(
-        "Driver={SQL Server Native Client 11.0};"
-        "Server=Mikasa;"
-        "Database=ExaminationSystem;"
-        "Trusted_Connection=yes;"
-        "MARS_Connection=Yes"
-    )
 def check_student(userName,password):
     cursor = conn.cursor()
     cursor.execute("check_student ?,?;",(userName,password))
@@ -34,121 +28,144 @@ def check_admin(userName,password):
             return val
         
 def initializing():
-    # print("To log in press 1 \nTo sign up press 2")
-    option = input("To log in press 1 \nTo sign up press 2\n")# parse int
-    # option = int(input())
+    option= int( input("wlecome to Examination-system\n-------------------------------\nTo log in press 1 \nTo sign up press 2\n"))
     option = int(option)
     if option == 1:
-        # print("please enter your username")
-        # username = input()
-        # print("please enter your password")
-        # password = input()
-        # print("please enter your role, whether you are student, instructor or admin")
-        # role = input()
-        print(option)
         loginMenu()
     elif option == 2: # in student table
+        print("please enter your first name")
+        fname = input()
+        print("please enter your last name")
+        lname = input()
         print("please enter your username")
         username = input()
         print("please enter your password")
         password = input()
-        # signUp(username, password)
-        # initializing() # to login after sign up
+        cursor = conn.cursor()
+        cursor.execute(
+        "insert into student(FirstName,LastName, username, password) values (?,?,?,?);",
+         (fname,lname, username, password)   
+        )
+        conn.commit()
         
+        loginMenu()
+
 def loginMenu():
   type= int( input("wlecome to Examination-system\n-------------------------------\nchoose ur type to login\n1-Admin\n2-instructor\n3-Student\n") )
   while type>3 or type<1:
     type= int (input("invalid type please try again"))
     
     
-  username=input("user name:")
-  password=input("user password:")
+  username=input("username:")
+  password=input("userpassword:")
     
   if type == 1:
       check = check_admin(username,password)
       if check != 0:
         adminUser()
+      else:
+          print("\nplease try again\n")
+          loginMenu()
     # adminUser()
   elif type == 2:
       check = check_instructor(username,password)
       if check != 0:
         instructorUser()
+      else:
+        print("\nplease try again\n")
+        loginMenu()
   elif type == 3:
       stdID = check_student(username,password)
       if stdID != 0:
         studentUser(stdID)
-    # check_student(username,password)
-    # stdID = check_student(username,password)
-    # studentUser(stdID)
-        
-  
+      else:
+        print("\nplease try again\n")
+        loginMenu()
 
 def studentUser(stdID):
-    print("if you want to enroll new course press 1, get approved courses press 2 or take exam press 3")
+    print("if you want to \nenroll new course press 1, \nget approved courses press 2, \ntake exam press 3, \nget your grades press 4\n")
     userFunction = int(input())
     # userFunction = input()
-    st1=student.Student("a")
+    st1=student.Student(stdID,"a")
     if userFunction == 1:
-        print("please insert the exam id")
+        print("please insert the course name")
         # crsID = input()
-        crsID = int(input())
-        st1.enroll(crsID)
+        crsName = input()
+        st1.enroll(crsName)
+        studentUser(stdID)
     elif userFunction == 2:
-        st1.getApprovedCourses(stdID)
+        st1.getCourses()
+        studentUser(stdID)
     elif userFunction == 3:
         print("please insert the exam id")
         # examID = input()
         examID = int(input())
         st1.takeExam(examID)
-        
-        
+        studentUser(stdID)
+    elif userFunction==4:
+        st1.getGrades()
+        studentUser(stdID)
+    else:
+        print("please choose 1, 2, 3 or 4")
 
 def adminUser():
-    print("if you want to add new course press 1, \nedit course press 2, \ndelete course press 3, \ninsert new instructor press 4, \nedit instructor press 5, \ndelete instructor press 6, \nto decide student state in a specific course press 7 \nor generate report press 8")
     # userFunction = input()
     ad1= admin.Admin("a")
-    userFunction = int(input())
-    if userFunction == 1:
-        print("please insert the course name")
-        courseName = input()
-        ad1.addCourse(courseName)
-    elif userFunction == 2:
-        print("please insert the course id")
-        courseID = input()
-        print("please insert the new course name")
-        courseName = input()
-        ad1.editCourse(courseID, courseName)
-    elif userFunction == 3:
-        print("please insert the course id")
-        courseID = input()
-        ad1.deleteCourse(courseID)
-    elif userFunction == 4:
-        print("please insert the instructor name")
-        InstructorName = input()
-        ad1.addInstructor(InstructorName)
-    elif userFunction == 5:
-        print("please insert the instructor id")
-        InstructorID = input()
-        print("please insert the instructor name")
-        InstructorName = input()
-        ad1.editInstructor(InstructorID, InstructorName)
-    elif userFunction == 6:
-        print("please insert the instructor id")
-        InstructorID = input()
-        ad1.deleteInstructor(InstructorID)
-    elif userFunction == 7:
-        print("please insert the student id")
-        stdID = input()
-        print("please insert the course id")
-        crsID = input()
-        print("please insert your decision 'approved' or 'declined'")
-        decision = input()
-        ad1.approveDeclineStudents(stdID, crsID, decision)
-    elif userFunction == 8:
-        ad1.generateReport()
-        
-        
+    flag= True
 
+    while flag:
+        print("PRESS 1:\n\tTo add new course, \nPRESS 2:\n\tTo edit course, \nPRESS 3:\n\tTo delete course, \nPRESS 4:\n\tinsert new instructor, \nPRESS 5:\n\tTo edit instructor. \nPRESS 6:\n\tTo delete instructor. \nPRESS 7:\n\tTo Approve courses \nPRESS 8:\n\tTo generate report.\nPRESS 0:\n\tTo LOGOUT")
+
+        userFunction = int(input())
+    
+        if userFunction == 1:
+            print("please insert the course name")
+            courseName = input()
+            print("please insert the instructor id associated to this course")
+            insID = input()
+            ad1.addCourse(courseName, insID)
+        elif userFunction == 2:
+            print("please insert the course name you want to change")
+            old = input()
+            print("please insert the new course name")
+            new = input()
+            ad1.editCourseName(old, new)
+        elif userFunction == 3:
+            print("please insert the course name")
+            courseName = input()
+            ad1.deleteCourse(courseName)
+        elif userFunction == 4:
+            print("please insert the instructor first name")
+            InstructorFName = input()
+            print("please insert the instructor last name")
+            InstructorLName = input()
+            print("please insert the instructor username")
+            userName = input()
+            print("please insert the instructor password")
+            password = input()
+            ins1 = instructor.Instrucor(InstructorFName, InstructorLName, userName, password)
+            ad1.addInstructor(ins1.fname, ins1.lname, ins1.username, ins1.password)
+        elif userFunction == 5:
+            print("please insert the instructor id")
+            InstructorID = input()
+            print("please insert the instructor name")
+            InstructorName = input()
+            ad1.editInstructorUsername(InstructorID, InstructorName)
+        elif userFunction == 6:
+            print("please insert the instructor id")
+            InstructorID = input()
+            ad1.deleteInstructor(InstructorID)
+        elif userFunction == 7:
+            ad1.approveDeclineStudents()
+        elif userFunction == 8:
+            ad1.generateReport()
+        elif userFunction == 0:
+            flag = False
+            loginMenu()
+        else:
+            print("please select a number from 1 to 8 or PRESS 0 to LOGOUT")
+            adminUser()
+   
 def instructorUser():
     print("if you want to add new question press 1, \ngenerate exam press 2")
     # userFunction = input()
@@ -158,8 +175,7 @@ def instructorUser():
         print("please enter the question body")
         questionBody = input()
         print("please enter the course id")
-        # crsID = input()
-        crsID = int(input())
+        crsID = input()
         print("please enter the choiceA")
         choiceA = input()
         print("please enter the choiceB")
@@ -170,23 +186,19 @@ def instructorUser():
         choiceD = input()
         print("please enter the correct answer")
         correctAns = input()
-        ins1.addQuestion(questionBody, crsID, choiceA, choiceB, choiceC, choiceD, correctAns)
+        ques = question.Question(questionBody, crsID, choiceA, choiceB, choiceC, choiceD, correctAns)
+        ins1.addQuestion(ques)
+        instructorUser()
     elif userFunction == 2:
         print("please enter the course id")
         # crsID = input()
         crsID = int(input())
         print("please enter the number of questions")
         NumOfQuestion = input()
-        ins1.generateExam(crsID, NumOfQuestion)
-    
-    
-initializing()
+        exam1 = exam.Exam(crsID, NumOfQuestion)
+        ins1.generateExam(exam1)
+        instructorUser()
 
-# cursor = conn.cursor()
-# cursor.execute(" select * from student where stdID = 1;")
-# for row in cursor:
-#     for val in row:
-#         print("val")
-#         print(val)
-#     print("row")
-#     print(row)
+
+initializing()
+# loginMenu()

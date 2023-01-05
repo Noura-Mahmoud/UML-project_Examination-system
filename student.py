@@ -5,7 +5,8 @@ conn = connector()
 
 
 class Student(p.Person):
-    def __init__(self, stdID, firstName, lastName):
+    def __init__(self, stdID, firstName, lastName = "", username="", password=""):
+        p.Person.__init__(self, firstName, lastName, username, password)
         self.stdID = stdID
         self.firstName = firstName
         self.lastName = lastName
@@ -124,11 +125,3 @@ class Student(p.Person):
     #     percentage = true_count / total_count * 100
     #     percentage_rounded = round(percentage)
     #     return percentage_rounded
-
-
-s1 = Student(1, "Ahmed", "Kamal")
-# s1.get_data("grades")
-s1.takeExam(1)
-# print(s1.countCorrectAnswers(1))
-# is_correct = s1.check_answer(1)
-# print(is_correct)

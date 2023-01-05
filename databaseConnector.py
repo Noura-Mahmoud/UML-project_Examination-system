@@ -1,12 +1,11 @@
 import pyodbc
 from prettytable import PrettyTable
 
-
 #connect to database
 def connector():
     conn = pyodbc.connect(
         "Driver={SQL Server};"
-        "server=AHMEDKAMALDCFD;"
+        "server=Youssef;"
         "Database=ExaminationSystem;"
         "Trusted_Connection=yes;"
     )
