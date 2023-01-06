@@ -7,7 +7,6 @@ def check_student(userName,password):
     cursor.execute("check_student ?,?;",(userName,password))
     for row in cursor:
         for val in row: 
-            print(val)
             return val
         
 def check_instructor(userName,password):
@@ -15,7 +14,6 @@ def check_instructor(userName,password):
     cursor.execute("check_instructor ?,?;",(userName,password))
     for row in cursor:
         for val in row: 
-            print(val)
             return val
         
         
@@ -24,7 +22,6 @@ def check_admin(userName,password):
     cursor.execute(" check_admin ?,?;",(userName,password))
     for row in cursor:
         for val in row: 
-            print(val)
             return val
         
 def initializing():
@@ -45,7 +42,7 @@ def initializing():
         cursor.execute(
         "insert into student(FirstName,LastName, username, password) values (?,?,?,?);",
          (fname,lname, username, password)   
-        )
+            )
         conn.commit()
         
         loginMenu()
@@ -56,104 +53,86 @@ def loginMenu():
     type= int (input("invalid type please try again"))
     
     
-  username=input("username:")
-  password=input("userpassword:")
-    
-  if type == 1:
-      check = check_admin(username,password)
-      if check != 0:
-        adminUser()
-      else:
-          print("\nplease try again\n")
-          loginMenu()
-    # adminUser()
-  elif type == 2:
-      check = check_instructor(username,password)
-      if check != 0:
-        instructorUser()
-      else:
-        print("\nplease try again\n")
-        loginMenu()
-  elif type == 3:
-      stdID = check_student(username,password)
-      if stdID != 0:
-        studentUser(stdID)
-      else:
-        print("\nplease try again\n")
-        loginMenu()
+    username=input("username: ")
+    password=input("password: ")
+        
+    if type == 1:
+        check = check_admin(username,password)
+        if check != 0:
+            adminUser()
+        else:
+            print("\nplease try again\n")
+            loginMenu()
+        # adminUser()
+    elif type == 2:
+        check = check_instructor(username,password)
+        if check != 0:
+            instructorUser()
+        else:
+            print("\nplease try again\n")
+            loginMenu()
+    elif type == 3:
+        stdID = check_student(username,password)
+        if stdID != 0:
+            studentUser(stdID)
+        else:
+            print("\nplease try again\n")
+            loginMenu()
 
 def studentUser(stdID):
-    print("if you want to \nenroll new course press 1, \nget approved courses press 2, \ntake exam press 3, \nget your grades press 4\n")
-    userFunction = int(input())
-    # userFunction = input()
-    st1=student.Student(stdID,"a")
-    if userFunction == 1:
-        print("please insert the course name")
-        # crsID = input()
-        crsName = input()
-        st1.enroll(crsName)
-        studentUser(stdID)
-    elif userFunction == 2:
-        st1.getCourses()
-        studentUser(stdID)
-    elif userFunction == 3:
-        print("please insert the exam id")
-        # examID = input()
-        examID = int(input())
-        st1.takeExam(examID)
-        studentUser(stdID)
-    elif userFunction==4:
-        st1.getGrades()
-        studentUser(stdID)
-    else:
-        print("please choose 1, 2, 3 or 4")
+    flag= True
+    while flag:
+        print("PRESS 1:\n\tTo enroll new course. \nPRESS 2:\n\tTo get your approved courses. \nPRESS 3:\n\tTo take exam\nPRESS 4:\n\tTo get your grades.\nPRESS 0:\n\tTo LOGOUT")
+        userFunction = int(input())
+        st1=student.Student(stdID,"a")
+        if userFunction == 1:
+            crsName = input(" insert the course name.\n\t>>")
+            st1.enroll(crsName)
+        elif userFunction == 2:
+            st1.getCourses()
+        elif userFunction == 3:
+            examID = int(input("Please insert the exam id\n\t>>"))
+            st1.takeExam(examID)
+        elif userFunction==4:
+            st1.getGrades()
+        elif userFunction==0:
+            flag= False
+            loginMenu()
+        else:
+            print("please choose 1, 2, 3 or 4")
 
 def adminUser():
-    # userFunction = input()
     ad1= admin.Admin("a")
     flag= True
-
     while flag:
         print("PRESS 1:\n\tTo add new course, \nPRESS 2:\n\tTo edit course, \nPRESS 3:\n\tTo delete course, \nPRESS 4:\n\tinsert new instructor, \nPRESS 5:\n\tTo edit instructor. \nPRESS 6:\n\tTo delete instructor. \nPRESS 7:\n\tTo Approve courses \nPRESS 8:\n\tTo generate report.\nPRESS 0:\n\tTo LOGOUT")
 
         userFunction = int(input())
-    
         if userFunction == 1:
-            print("please insert the course name")
-            courseName = input()
-            print("please insert the instructor id associated to this course")
-            insID = input()
+            courseName = input("Insert the course name")
+            insID = input("Insert the associated instructorID with this course")
             ad1.addCourse(courseName, insID)
         elif userFunction == 2:
-            print("please insert the course name you want to change")
-            old = input()
-            print("please insert the new course name")
-            new = input()
+            old = input("please insert the course name you want to change")
+            new = input("please insert the new course name")
             ad1.editCourseName(old, new)
         elif userFunction == 3:
-            print("please insert the course name")
-            courseName = input()
+            courseName = input("please insert the course name")
             ad1.deleteCourse(courseName)
         elif userFunction == 4:
-            print("please insert the instructor first name")
-            InstructorFName = input()
-            print("please insert the instructor last name")
-            InstructorLName = input()
-            print("please insert the instructor username")
-            userName = input()
-            print("please insert the instructor password")
-            password = input()
+            print("Please Fill the following:\n")
+            InstructorFName = input("Instructor's First name: ")
+            InstructorLName = input("Instructor's Last name: ")
+            userName = input("Instructor's Username: ")
+            password = input("Instructor's Password: ")
             ins1 = instructor.Instrucor(InstructorFName, InstructorLName, userName, password)
             ad1.addInstructor(ins1.fname, ins1.lname, ins1.username, ins1.password)
         elif userFunction == 5:
-            print("please insert the instructor id")
-            InstructorID = input()
-            print("please insert the instructor name")
-            InstructorName = input()
+            InstructorID = input("please insert the instructor id")
+            InstructorName = input("please insert the instructor name")
             ad1.editInstructorUsername(InstructorID, InstructorName)
         elif userFunction == 6:
-            print("please insert the instructor id")
-            InstructorID = input()
+            InstructorID = input("please insert the instructor id")
             ad1.deleteInstructor(InstructorID)
         elif userFunction == 7:
             ad1.approveDeclineStudents()
@@ -167,38 +146,38 @@ def adminUser():
             adminUser()
    
 def instructorUser():
-    print("if you want to add new question press 1, \ngenerate exam press 2")
-    # userFunction = input()
-    userFunction = int(input())
-    ins1 = instructor.Instrucor("a")
-    if userFunction == 1:
-        print("please enter the question body")
-        questionBody = input()
-        print("please enter the course id")
-        crsID = input()
-        print("please enter the choiceA")
-        choiceA = input()
-        print("please enter the choiceB")
-        choiceB = input()
-        print("please enter the choiceC")
-        choiceC = input()
-        print("please enter the choiceD")
-        choiceD = input()
-        print("please enter the correct answer")
-        correctAns = input()
-        ques = question.Question(questionBody, crsID, choiceA, choiceB, choiceC, choiceD, correctAns)
-        ins1.addQuestion(ques)
-        instructorUser()
-    elif userFunction == 2:
-        print("please enter the course id")
-        # crsID = input()
-        crsID = int(input())
-        print("please enter the number of questions")
-        NumOfQuestion = input()
-        exam1 = exam.Exam(crsID, NumOfQuestion)
-        ins1.generateExam(exam1)
-        instructorUser()
+    flag=True
+    while flag:
+        print("PRESS 1:\n\tTo add new question.\nPRESS 2:\n\tTo Generate exam.\nPRESS 3:\n\tTo LOGOUT")
+        userInput = int(input())
+        if userInput == 1:
+            fillQuestion()
+        elif userInput == 2:
+            GenerateExam()
+        elif userInput == 3:
+            flag = False
+    return
+    
 
+
+def fillQuestion():
+    ins1 = instructor.Instrucor("a")
+    print("Please Enter the following:\n ")
+    crsID = input("Course id: ")
+    questionBody = input("Question body:\n >> ")
+    choiceA = input(" - choice A: ")
+    choiceB = input(" - choice B: ")
+    choiceC = input(" - Choice C: ")
+    choiceD = input(" - Choice D: ")
+    correctAns = input("The Correct Answer: ")
+    ques = question.Question(questionBody, crsID, choiceA, choiceB, choiceC, choiceD, correctAns)
+    ins1.addQuestion(ques)
+
+def GenerateExam():
+    ins1 = instructor.Instrucor("a")
+    crsID = int(input("please enter the course id"))
+    NumOfQuestion = input("please enter the number of questions")
+    exam1 = exam.Exam(crsID, NumOfQuestion)
+    ins1.generateExam(exam1)
 
 initializing()
-# loginMenu()
