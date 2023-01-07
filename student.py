@@ -29,21 +29,27 @@ class Student(p.Person):
     def get_exam_questions(self, examID):
         cursor = conn.cursor()
         cursor.execute("EXEC GetExam @examID = ?", examID)
-        questions = cursor.fetchall()
+        columns = [column[0] for column in cursor.description]
+        questions = [
+            dict(zip(columns, row))
+            for row in cursor.fetchall()
+        ]
+        print(questions)
         return questions
+
 
     def answer_questions(self, questions):
         for question in questions:
-            print(question.question)
-            print("A. " + question.A)
-            print("B. " + question.B)
-            print("C. " + question.C)
-            print("D. " + question.D)
-            answer = input("Please enter your answer: ")
-            # Submit the student's answer
+            print('\n'+question['question'])
+            print("A. " + question['A'])
+            print("B. " + question['B'])
+            print("C. " + question['C'])
+            print("D. " + question['D'])
+            studentChoice = input("Choose the appropriate letter A, B, C or D: ")
+            studentChoice = studentChoice.capitalize()
             cursor = conn.cursor()
-            cursor.execute("EXEC SolveQuestion @stdID = ?, @quesID = ?, @answer = ?", self.stdID, question.quesID,
-                           answer)
+            cursor.execute("EXEC SolveQuestion @stdID = ?, @quesID = ?, @answer = ?", self.stdID, question['quesID'],
+                          question[studentChoice])
             cursor.commit()
         print("=============================")
         print("Exam submitted successfully!")
