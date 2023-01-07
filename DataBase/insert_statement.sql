@@ -88,11 +88,11 @@ VALUES ('Paris', 'Berlin', 'London', 'Rome', 'Paris', 1),
 ('for (int i = 0; i < 10; i++)', 'for (i = 0; i < 10; i++)', 'for i in range(10)', 'for (i <= 10; i++)', 'for (int i = 0; i < 10; i++)', 3),
 ('A = bh/2', 'A = s(s-a)(s-b)(s-c)', 'A = (b+c)h/2', 'A = bh', 'A = bh/2', 4),
 ('0 degrees Celsius', '100 degrees Celsius', '32 degrees Fahrenheit', '212 degrees Fahrenheit', '100 degrees Celsius', 5),
-('Sydney', 'Canberra', 'Perth', 'Melbourne', 'Canberra', 1),
-('John Adams', 'George Washington', 'Thomas Jefferson', 'Benjamin Franklin', 'George Washington', 2),
-('Mount Everest', 'Mount Kilimanjaro', 'Mount Fuji', 'Mount K2', 'Mount Everest', 3),
-('Hertz', 'Joule', 'Watt', 'Ohm', 'Hertz', 4),
-('Leonardo da Vinci', 'Michelangelo', 'Vincent van Gogh', 'Pablo Picasso', 'Leonardo da Vinci', 5);
+('Sydney', 'Canberra', 'Perth', 'Melbourne', 'Canberra', 6),
+('John Adams', 'George Washington', 'Thomas Jefferson', 'Benjamin Franklin', 'George Washington', 7),
+('Mount Everest', 'Mount Kilimanjaro', 'Mount Fuji', 'Mount K2', 'Mount Everest', 8),
+('Hertz', 'Joule', 'Watt', 'Ohm', 'Hertz', 9),
+('Leonardo da Vinci', 'Michelangelo', 'Vincent van Gogh', 'Pablo Picasso', 'Leonardo da Vinci', 10);
 
 INSERT INTO student_exam (examID, stdID, grade)
 VALUES (1, 1, 85),
@@ -117,3 +117,6 @@ VALUES (1, 1, 'Paris'),
 (8, 8, 'Mount Everest'),
 (9, 9, 'Hertz'),
 (10, 10, 'Leonardo da Vinci');
+
+INSERT INTO exam_question 
+VALUES (1, 1), (1, 2),(2, 3),(3, 1) ,(3, 2);
