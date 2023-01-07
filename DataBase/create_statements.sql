@@ -1,8 +1,8 @@
-CREATE DATABASE Examination_System;
+CREATE DATABASE ExaminationSystem;
 
-drop DATABASE Examination_System
+drop DATABASE ExaminationSystem
 
-USE Examination_System;
+USE ExaminationSystem;
 
 CREATE TABLE student 
 (
