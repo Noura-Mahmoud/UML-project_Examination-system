@@ -154,8 +154,13 @@ BEGIN
 	DECLARE  @correctAnswers float = (select count(result) FROM @MyTableType WHERE result = 'true');
 	DECLARE  @grade float = (@correctAnswers/@totalNumOfQuestions * 100);
 
-	INSERT INTO student_exam
-	VALUES (@examID,@stdID,@grade)
+	IF EXISTS (select * from student_exam where examID= @examID AND stdID = @stdID)
+		UPDATE student_exam
+		SET grade=50
+		WHERE examID=@examID AND stdID = @stdID 
+	ELSE
+		INSERT INTO student_exam
+		VALUES (@examID,@stdID,@grade)
 END
 
 
