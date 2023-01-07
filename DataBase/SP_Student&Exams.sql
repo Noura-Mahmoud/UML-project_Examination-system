@@ -156,7 +156,7 @@ BEGIN
 
 	IF EXISTS (select * from student_exam where examID= @examID AND stdID = @stdID)
 		UPDATE student_exam
-		SET grade=50
+		SET grade=@grade
 		WHERE examID=@examID AND stdID = @stdID 
 	ELSE
 		INSERT INTO student_exam
