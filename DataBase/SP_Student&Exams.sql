@@ -141,13 +141,32 @@ BEGIN
     WHERE sa.stdID = @stdID AND sa.quesID IN (SELECT quesID FROM getExamTable(@examID))
 END
 
+CREATE OR ALTER PROCEDURE storeStudentGrades
+    @stdID int,
+    @examID int
+AS
+BEGIN
+	DECLARE  @MyTableType table (quesID int, result varchar(50) )
+	Insert into @MyTableType
+		EXEC CheckExamAnswers @stdID, @examID
+
+	DECLARE  @totalNumOfQuestions float = (select count(*) FROM @MyTableType);
+	DECLARE  @correctAnswers float = (select count(result) FROM @MyTableType WHERE result = 'true');
+	DECLARE  @grade float = (@correctAnswers/@totalNumOfQuestions * 100);
+
+	INSERT INTO student_exam
+	VALUES (@examID,@stdID,@grade)
+END
+
 
 
 -- testing stored procedures
 
 select * from std_answers
-EXEC CheckExamAnswers @stdID = 1, @examID = 1
+EXEC CheckExamAnswers @stdID = 11, @examID = 1
 EXEC CheckAnswer @stdID = 1, @quesID = 1;
+EXEC storeStudentGrades 11, 1
+
 select * from Exam
 
 

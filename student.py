@@ -34,7 +34,6 @@ class Student(p.Person):
             dict(zip(columns, row))
             for row in cursor.fetchall()
         ]
-        print(questions)
         return questions
 
 
@@ -53,11 +52,13 @@ class Student(p.Person):
             cursor.commit()
         print("=============================")
         print("Exam submitted successfully!")
+    
 
     def takeExam(self, examID):
         self.get_exam_info(examID)
         questions = self.get_exam_questions(examID)
         self.answer_questions(questions)
+        self._correctExam(examID)
 
     def getCourses(self, return_data=False):
         cursor = conn.cursor()
@@ -108,6 +109,13 @@ class Student(p.Person):
         else:
             table = array_to_table(data)
             print(table)
+
+    def _correctExam(self,examID):
+        cursor = conn.cursor()
+        cursor.execute("EXEC storeStudentGrades ?, ?", self.stdID, examID)
+        cursor.commit()
+
+
 
     # def checkExamAnswers(self, examID, return_data=False):
     #     cursor = conn.cursor()
