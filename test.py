@@ -48,10 +48,9 @@ def initializing():
         loginMenu()
 
 def loginMenu():
-  type= int( input("wlecome to Examination-system\n-------------------------------\nchoose ur type to login\n1-Admin\n2-instructor\n3-Student\n") )
-  while type>3 or type<1:
-    type= int (input("invalid type please try again"))
-    
+    type= int( input("wlecome to Examination-system\n-------------------------------\nchoose ur type to login\n1-Admin\n2-instructor\n3-Student\n") )
+    while type>3 or type<1:
+        type= int (input("invalid type please try again"))
     
     username=input("username: ")
     password=input("password: ")
