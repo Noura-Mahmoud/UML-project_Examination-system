@@ -15,13 +15,12 @@ class Instrucor(p.Person):
     cursor = conn.cursor()
     cursor.execute("select top 1 ExamID from Exam order by ExamID desc;")
     for row in cursor:
-        print(row)
         for val in row:
-          print("the exam id is: ?;", (val))
+          print("the exam id is: ", (val))
     
   def generateExam(self, exam):
     cursor = conn.cursor()
-    cursor.execute("generateExam ?,?;",(exam.courseID,exam.NumOfQuestion))
+    cursor.execute("generateExam ?,?,?,?;",(exam.courseID,exam.NumOfQuestion,exam.description,exam.duration))
     conn.commit()
     # return examid of the generated exam
     self.getExamId()

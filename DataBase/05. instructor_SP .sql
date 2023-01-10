@@ -13,10 +13,17 @@ END
 
 ----------------------------------------------------generateExam-----------------------------------------------
 
-create or alter proc generateExam @crsID int, @nubOfQues int WITH ENCRYPTION
+create or alter proc generateExam
+	@crsID int,
+	@nubOfQues int,
+	@ExamDescription varchar(50),
+	@ExamDurationMinutes int
+	
+WITH ENCRYPTION
+
 as
 --1
-	insert into Exam(crsID) values(@crsID)
+	insert into Exam(crsID,ExamDescription,ExamDurationMinutes) values(@crsID,@ExamDescription,@ExamDurationMinutes)
 	--decalre temp table to questions and itereate on it by the cursor
 	DECLARE @quesTable TABLE (questionID int)
 --2
@@ -43,7 +50,6 @@ as
 		select @examID
 	close c1
 	deallocate c1
-
 
 --------------------------------------------------------------------------
 --if user exists the funcions return his ID otherwise returns 0

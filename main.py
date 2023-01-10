@@ -174,9 +174,12 @@ def fillQuestion():
 
 def GenerateExam():
     ins1 = instructor.Instrucor("a")
-    crsID = int(input("please enter the course id"))
-    NumOfQuestion = input("please enter the number of questions")
-    exam1 = exam.Exam(crsID, NumOfQuestion)
+    print("Please fill the following info: \n")
+    crsID = int(input("- Course id: "))
+    description = input("- Exam Description: ")
+    duration = int(input("- Exam Duration: "))
+    NumOfQuestion = int(input("- Number of Questions: "))
+    exam1 = exam.Exam(crsID, NumOfQuestion,description,duration)
     ins1.generateExam(exam1)
 
 initializing()

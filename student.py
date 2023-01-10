@@ -139,3 +139,7 @@ class Student(p.Person):
     #     percentage = true_count / total_count * 100
     #     percentage_rounded = round(percentage)
     #     return percentage_rounded
+
+
+# s1 = Student(1,"a")
+# s1.takeExam(13)

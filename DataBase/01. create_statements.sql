@@ -120,3 +120,10 @@ CREATE TABLE std_answers
     FOREIGN KEY (quesID) REFERENCES question(quesID)
 );
 
+
+
+-- ============================================================
+ALTER TABLE student_exam 
+  ADD CONSTRAINT fk_name 
+  FOREIGN KEY (examID) REFERENCES exam(examID)
+  ON DELETE CASCADE;
